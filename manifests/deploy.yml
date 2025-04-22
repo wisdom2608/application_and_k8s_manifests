@@ -18,13 +18,13 @@ spec:
       containers:
 <<<<<<< HEAD
         - name: my-app
-          image: wisdom2608/wisdomtech:2025-04-22-17-36
+          image: wisdom2608/wisdomtech:2025-04-22-19-41
           imagePullPolicy: Always
           ports:
             - containerPort: 80
 =======
       - name: my-app
-        image: wisdom2608/wisdomtech:2025-04-22-19-15
+        image: wisdom2608/wisdomtech:2025-04-22-19-41
         imagePullPolicy: Always
         ports:
         - containerPort: 80
