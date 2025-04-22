@@ -238,8 +238,7 @@ To allow GitHub Actions to push or disable branch protections, you need to confi
 
 Granting GitHub Actions Permissions to Push commit changes to your repository,
 navigate to your repository's `Settings` → `Actions` → `General`.
-Under `Workflow permissions`, select:
-`"Read and write permissions"` to allow workflows to push changes.
+Under `Workflow permissions`, select: `"Read and write permissions"` to allow workflows to push changes.
 Optionally, enable the checkbox for "Allow GitHub Actions to bypass branch protections" if required.
 Save the changes.
 
