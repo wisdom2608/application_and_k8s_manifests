@@ -62,7 +62,7 @@ jobs:
       - name: Update image tag
         run: |
           sed -i "s|wisdom2608/wisdomtech:.*|wisdom2608/wisdomtech:${{ github.event.client_payload.tag }}|g" manifests/deploy.yml
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "wisdom2608"
+          git config user.email "mueatech087@gmail.com"
           git commit -am "Update image tag to ${{ github.event.client_payload.tag }}"
           git push
