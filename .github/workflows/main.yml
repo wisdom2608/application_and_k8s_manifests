@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Tag Docker Image With Curren Date and Timestamp
+      - name: Tag Docker Image With Current Date and Timestamp
         id: get_datetime
         run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
       
@@ -44,7 +44,6 @@ jobs:
       - name: Update Kubernetes manifest with new tag
         run: |
           cat deployment/deploy.yaml
-          mkdir -p k8s-out
-          sed "s/TAG_PLACEHOLDER/${{ steps.get_datetime.outputs.timestamp }}/g" deployment/deploy.yaml > deployment/deploy.yaml
+          sed -i "s/TAG_PLACEHOLDER/${{ steps.get_datetime.outputs.timestamp }}/g" deployment/deploy.yaml > deployment/deploy.yaml
           cat deployment/deploy.yaml
           echo "Updated deployment/deploy.yaml with new tag"
