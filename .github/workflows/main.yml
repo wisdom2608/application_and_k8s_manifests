@@ -51,7 +51,7 @@ jobs:
 
       - name: Update image tag in manifest
         run: |
-          cd manifests
+        
           git config user.name "wisdom2608"
           git config user.email "mueatech087@gmail.com"
           sed -i "s|wisdom2608/wisdomtech:.*|wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
