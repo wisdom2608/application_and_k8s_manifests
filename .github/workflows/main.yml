@@ -43,7 +43,7 @@ jobs:
 
       - name: Update Kubernetes manifest with new tag
         run: |
-          cat deploy/deploy.yaml
+          cat deployment/deploy.yaml
           mkdir -p k8s-out
           sed "s/TAG_PLACEHOLDER/${{ steps.get_datetime.outputs.timestamp }}/g" deployment/deploy.yaml > deployment/deploy.yaml
           cat deployment/deploy.yaml
