@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: wisdom2608/wisdomtech:tagname
+          image: wisdom2608/wisdomtech:2025-04-22-15-34
           imagePullPolicy: Always
           ports:
             - containerPort: 80
