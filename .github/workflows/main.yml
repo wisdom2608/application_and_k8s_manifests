@@ -34,40 +34,57 @@ jobs:
         run: |
           docker push wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }}
 
+# There  two ways to update the image tag in the Kubernetes manifests file:
+# a) Using sed command to find and replace the image tag in the Kubernetes manifest file direclty.
+     
+# # UPdate the K8s Manifest Files
+
+#         # View the old k8s manifest (optional)
+#       - name: Show Original Kubernetes Manifest
+#         run:  |
+#           cat manifests/deploy.yml
+
+#       # Update the image tag in the Kubernetes manifest file (Required)
+#       - name: Update Manifests with New Image Tag
+#         run: |
+#             sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
+
+#       # View the new k8s manifest after update (optional)
+#       - name: Show Updated Kubernetes Manifest
+#         run: cat manifests/deploy.yml
+
+
+# b) Using find command to find and replace the image tag in the Kubernetes manifests file.
+
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest before update(optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-# There  two ways to update the image tag in the Kubernetes manifests file:
-# a) Using sed command to find and replace the image tag in the Kubernetes manifest file direclty.
-
-# - name: Update Manifests with New Image Tag
-      #   run: |
-      #     sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
-
-# b) Using find command to find and replace the image tag in the Kubernetes manifests file.
+      # Update the image tag in the Kubernetes manifest file (Required)
       - name:  Update image tag in manifests
         run: |
           find ./manifests -type f -name "deploy.yml" -exec sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:.*|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" {} +
 
+      # View the new k8s manifest after update (optional)
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
 
 
 
 
-# Now that the image tag in the Kubernetes manifest file has been updated, you we need to ....
-# ..... update the repository as well.
+# Now that the image tag in the Kubernetes manifest file has been updated, we need to ....
+# ..... update the repository or commit the changes to the repository.
 
 
 # THERE ARE TWO WAYS TO UPDATE THE REPOSITORY:
 
 # a) First Possibility.
       
-    # # Update Github
-    #   - name: Commit the changes
+    # # Update Github Repository.
+    #   - name: Commit and push updated manifests
     #     run: |
     #       git config --global user.email "<>"
     #       git config --global user.name "GitHub Actions Bot"
@@ -93,3 +110,4 @@ jobs:
           git commit -m "Update image tag to ${{ steps.date_time.outputs.timestamp }}" || echo "No changes to commit"
           git push
 
+# Please Check The README.md File For More Detail

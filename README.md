@@ -1,13 +1,40 @@
-# Build and push docker image to dockerfile and then update kubernetes manifest file with the latest tag
+# This project is to build and push docker image to dockerhub, update kubernetes manifest file with the latest image tag, and commit the changes to the same (update the) repository
 # Step 1: Create a github repository  for your application  source code
-  - name of the repository: `application`
-  - Inside `application` repo:
-        -  create a `.github/workflows/main.yml` directry.
-        -  create another directry `manifests`
-        -  inside of `manifests`, create `service.yml` and `deploy.yml` files.
+  - N=Repository name: `application`
+  - Inside `application` repository:
 
-# Step 2: Build and push the image
-  - Here is the workflow jobs
+     -  create a `.github/workflows/main.yml` directry.
+     -  create another directry `manifests`
+     -  inside of `manifests`, create `service.yml` and `deploy.yml` files.
+
+`deploy.yml`
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: your_dokerub_username/your_image_name:2025-04-22-16-11 # Here is the image tag we want to updating whenever there are new changes in our  application source code
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+```
+
+# Step 2: Build and push docker image to dockerhub
+  - Here is the workflow file.
 
 ```bash
 name: Docker Image Build and Push To Docker Hub
@@ -48,23 +75,27 @@ jobs:
 
 ```
 
-# Step 3: After to image is built and pushed to dockerhub successfully, you can update k8s manifest files with the latest image tag
+# Step 3: We need to update the k8s manifest(deploy.yml) file with the latest image tag after the image is built and pushed to dockerhub successfully.
 
-- In the same workflow file, you add the steps for the image tag update. # There  two ways to update the image tag in the Kubernetes manifests file:
+- In the same workflow file, we add the steps for the image tag update.
+**There  two ways to update the image tag in the Kubernetes manifests(deploy.yml) file**:
 
 - a) *Using `sed` command to find and replace the image tag in the Kubernetes manifest file direclty*:
 
 ```bash
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest (optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-     - name: Update Manifests with New Image Tag
+      # Update the image tag in the Kubernetes manifest file (Required)
+      - name: Update Manifests with New Image Tag
         run: |
-          sed -i "s|image: your_dockerhub_username/image_name:.*|image: your_dockerhub_username/image_name:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
+            sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
 
+      # View the new k8s manifest after update (optional)
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
 
@@ -74,18 +105,21 @@ jobs:
 ```bash
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest before update(optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-      - name: Update Kubernetes manifests
+      # Update the image tag in the Kubernetes manifest file (Required)
+      - name:  Update image tag in manifests
         run: |
           find ./manifests -type f -name "deploy.yml" -exec sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:.*|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" {} +
 
+      # Vieww the new k8s manifest after update (optional)
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
 ```
-# NB: Choose any of the workflow files below for your project but not both.
+# So, choose any of the workflow files below for your project, but not both.
 
 - A) *Workflow file using `sed` command to find and replace the image tag in the Kubernetes manifest file direclty*:
 
@@ -128,14 +162,17 @@ jobs:
 
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest (optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-     - name: Update Manifests with New Image Tag
+      # Update the image tag in the Kubernetes manifest file (Required)
+      - name: Update Manifests with New Image Tag
         run: |
-          sed -i "s|image: your_dockerhub_username/image_name:.*|image: your_dockerhub_username/image_name:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
+            sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
 
+      # View the new k8s manifest after update (optional)
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
 
@@ -179,28 +216,30 @@ jobs:
       - name: Push Docker Image To Dockerhub Repository
         run: |
           docker push your_dockerhub_username/image_name:${{ steps.date_time.outputs.timestamp }}
-
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest before update(optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-      - name: Update Kubernetes manifests
+      # Update the image tag in the Kubernetes manifest file (Required)
+      - name:  Update image tag in manifests
         run: |
           find ./manifests -type f -name "deploy.yml" -exec sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:.*|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" {} +
 
+      # View the new k8s manifest after update (optional)
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
 ```
 
-# Step 4: Updating the repository after updating the K8S manifest in the workflow runs.
+# Step 4: Update or commit the changes Github repository after updating the K8s manifest in the workflow runs.
 To allow GitHub Actions to push or disable branch protections, you need to configure the necessary permissions and branch protection settings in your repository:
 
-1. Granting GitHub Actions Permissions to Push
-Navigate to your repository's Settings → Actions → General.
-Under Workflow permissions, select:
-"Read and write permissions" to allow workflows to push changes.
+Granting GitHub Actions Permissions to Push commit changes to your repository,
+navigate to your repository's `Settings` → `Actions` → `General`.
+Under `Workflow permissions`, select:
+`"Read and write permissions"` to allow workflows to push changes.
 Optionally, enable the checkbox for "Allow GitHub Actions to bypass branch protections" if required.
 Save the changes.
 
@@ -210,8 +249,8 @@ a) First possibility
 
 ```bash
       
-    # Update Github
-      - name: Commit the changes
+    # Update Github Repository
+      - name: Commit and push the updated manifests
         run: |
           git config --global user.email "<>"
           git config --global user.name "GitHub Actions Bot"
@@ -225,6 +264,7 @@ a) First possibility
 b) Second possibility
 
 ```bash
+# Update Github repository
       - name: Commit and push updated manifests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -241,7 +281,7 @@ b) Second possibility
 
 ```
 
-# NB: Two possible workflow yaml files to build and push docker image to dockerhub, update image tags in k8s manifests, and update(commit the change) to the repository. Choose any of the workflow files below
+# CONCLUSTION: Here aere two verriefied workflow yml files which you cand use to build and push docker image to dockerhub, update image tags in k8s manifests, and commit the changes to the Github repository. Choose any of the workflow files below
 
 I) 
 
@@ -284,18 +324,21 @@ jobs:
 
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest (optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-     - name: Update Manifests with New Image Tag
+      # Update the image tag in the Kubernetes manifest file (Required)
+      - name: Update Manifests with New Image Tag
         run: |
-          sed -i "s|image: your_dockerhub_username/image_name:.*|image: your_dockerhub_username/image_name:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
+            sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
 
+      # View the new k8s manifest after update (optional)
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
       
-    # Update Github
+    # Update Github Repository
       - name: Commit the changes
         run: |
           git config --global user.email "<>"
@@ -348,14 +391,21 @@ jobs:
 
 # UPdate the K8s Manifest Files
 
+        # View the old k8s manifest before update(optional)
       - name: Show Original Kubernetes Manifest
         run:  |
           cat manifests/deploy.yml
 
-      - name: Update Kubernetes manifests
+      # Update the image tag in the Kubernetes manifest file (Required)
+      - name:  Update image tag in manifests
         run: |
           find ./manifests -type f -name "deploy.yml" -exec sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:.*|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" {} +
 
+      # View the new k8s manifest after update (optional)
+      - name: Show Updated Kubernetes Manifest
+        run: cat manifests/deploy.yml
+
+# Update the github Repository
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
       - name: Commit and push updated manifests
@@ -373,5 +423,8 @@ jobs:
           git push
 
 ```
+# The Downside Of Having The Source Code and The Manifest Files In The Same Repository.
+The disadvantage of this approve is that we'll alway have to do `git pull` before updating our source code locally. This is because the update made on k8s manifest file is made on the remote repository. The change in image tag does not affect k8s manifest file in our local environment. So, have these changes, we must run `git pull`. 
 
+This means that anytime that we've to update our application source code, we've to do `git pull`. This makes our job tidious. To solve this problem, our application source code and k8s manifests files should be kept in different Github repositories. My next project will be to *build and push docker image to dockerhub* in `application` repository and then *update image tags in the k8s manifest file and commit the changes* to the `k8s manifest` repository.
 
