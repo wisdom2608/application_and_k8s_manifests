@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: wisdom2608/wisdomtech:TAG_PLACEHOLDER
+          image: wisdom2608/wisdomtech:tagname
           imagePullPolicy: Always
           ports:
             - containerPort: 80

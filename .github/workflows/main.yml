@@ -23,16 +23,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Tag Docker Image With Current Date and Timestamp
-        id: get_datetime
+        id: date_time
         run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
       
       - name: Build Docker Image
         run: |
-          docker build -t wisdom2608/wisdomtech:${{ steps.get_datetime.outputs.timestamp }} . # Replace with your image name
+          docker build -t wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }} . 
       
       - name: Push Docker Image To Dockerhub Repository
         run: |
-          docker push wisdom2608/wisdomtech:${{ steps.get_datetime.outputs.timestamp }} # Replace with your image name
+          docker push wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }}
 
       # # UPdate the K8s Manifest Files
       # - name: Update K8s Manifests
@@ -54,7 +54,7 @@ jobs:
 
       - name: Update Manifest with New Image Tag
         run: |
-          sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{ steps.timestamp.outputs.tag }}|g" deployment/deploy.yml
+          sed -i "s|image: wisdom2608/wisdomtech:*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" deployment/deploy.yml
 
       - name: Show Updated Kubernetes Manifest
         run: cat deployment/deploy.yml
