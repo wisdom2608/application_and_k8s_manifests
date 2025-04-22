@@ -34,19 +34,7 @@ jobs:
         run: |
           docker push wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }}
 
-      # # UPdate the K8s Manifest Files
-      # - name: Update K8s Manifests
-      #   run: |
-      #     cat deploy/deploy.yaml
-      #   #  sed -i "s|image: 1nfosecsingh/demo-app:.*|image: 1nfosecsingh/demo-app:${{ env.VERSION }}|g" deploy/deploy.yaml
-      #     cat deploy/deploy.yaml
-
-      # - name: Update Kubernetes Manifest With New Tag
-      #   run: |
-      #     cat deployment/deploy.yml
-      #     sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deploy.yml
-      #     cat deployment/deploy.yml
-          
+# UPdate the K8s Manifest Files
 
       - name: Show Original Kubernetes Manifest
         run:  |
@@ -58,5 +46,15 @@ jobs:
 
       - name: Show Updated Kubernetes Manifest
         run: cat deployment/deploy.yml
+# Now that the image tag in the Kubernetes manifest file has been updated, you we need to ....
+# ..... update the repository as well.
 
- #sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deploy.yml
+      - name: Update image tag in manifest
+        run: |
+          cd deployment
+          git config user.name "wisdom2608"
+          git config user.email "mueatech087@gmail.com"
+          sed -i "s|wisdom2608/wisdomtech:.*|wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" deployment/deploy.yml
+          git checkout -b update-image-${{ steps.date_time.outputs.timestamp }}
+          git commit -am "Update image tag to ${{ steps.date_time.outputs.timestamp }}"
+          git push origin update-image-${{ steps.date_time.outputs.timestamp }}
