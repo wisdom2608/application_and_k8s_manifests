@@ -54,7 +54,7 @@ jobs:
 
       - name: Update Manifest with New Image Tag
         run: |
-          sed -i "s|image: wisdom2608/wisdomtech:*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|" deployment/deploy.yml
+          sed -i "s|image: wisdom2608/wisdomtech: . *|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" deployment/deploy.yml
 
       - name: Show Updated Kubernetes Manifest
         run: cat deployment/deploy.yml
