@@ -45,7 +45,7 @@ jobs:
       #     sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{  steps.date_time.outputs.timestamp }}|g" manifests/deploy.yml
       - name: Update K8s manifests
         run: |
-          find . -type f -name "/manifest/deploy.yaml" -exec sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:.*|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" {} +
+          find . -type f -name "/manifests/deploy.yaml" -exec sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:.*|${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.date_time.outputs.timestamp }}|g" {} +
 
       - name: Show Updated Kubernetes Manifest
         run: cat manifests/deploy.yml
