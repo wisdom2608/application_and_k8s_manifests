@@ -44,6 +44,6 @@ jobs:
       - name: Update Kubernetes Manifest With New Tag
         run: |
           cat deployment/deploy.yml
-          sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deplo.yml
+          sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deploy.yml
           cat deployment/deploy.yml
           
