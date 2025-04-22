@@ -60,16 +60,24 @@ jobs:
 
 # Now that the image tag in the Kubernetes manifest file has been updated, you we need to ....
 # ..... update the repository as well.
+
+
+# THERE ARE TWO WAYS TO UPDATE THE REPOSITORY:
+
+# a) First Possibility.
       
     # # Update Github
     #   - name: Commit the changes
     #     run: |
-    #       git config --global user.email "mueatech087@gmail.com"
+    #       git config --global user.email "<>"
     #       git config --global user.name "GitHub Actions Bot"
     #       git add manifests/deploy.yml
     #       git commit -m "Update deploy.yaml with new image tag - ${{ steps.date_time.outputs.timestamp }}"
     #       git remote set-url origin https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/wisdom2608/application.git
     #       git push origin main
+
+
+    # a) Second Possibility.
 
       - name: Commit and push updated manifests
         env:
