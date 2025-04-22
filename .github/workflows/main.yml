@@ -44,6 +44,6 @@ jobs:
       - name: Update Kubernetes Manifest With New Tag
         run: |
           cat deployment/deploy.yml
-          sed -i "s|TAG_PLACEHOLDER|${{ steps.get_datetime.outputs.timestamp }}|g" deployment|deploy.yaml > deployment/deploy.yaml
+          sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deplo.yml
           cat deployment/deploy.yml
           
