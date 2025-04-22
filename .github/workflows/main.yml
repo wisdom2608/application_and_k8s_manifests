@@ -54,9 +54,9 @@ jobs:
 
       - name: Update Manifest with New Image Tag
         run: |
-          sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deploy.yml
-        env:
-          DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/wisdomtech:${{ steps.timestamp.outputs.tag }}
+          sed -i "s|image: wisdom2608/wisdomtech:.*|image: wisdom2608/wisdomtech:${{ steps.timestamp.outputs.tag }}|g" deployment/deploy.yaml
 
       - name: Show Updated Kubernetes Manifest
         run: cat deployment/deploy.yml
+
+ #sed -i "s|image:.*|image: $DOCKER_IMAGE|" deployment/deploy.yml
