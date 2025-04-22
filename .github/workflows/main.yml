@@ -70,5 +70,5 @@ jobs:
           git commit -m "Update deploy.yaml with new image tag - ${{ steps.date_time.outputs.timestamp }}"
           git remote set-url origin https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/wisdom2608/application.git
           git push origin main
-  # Deploy to Kubernetes Cluster
+
 
