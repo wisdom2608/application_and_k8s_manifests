@@ -35,8 +35,11 @@ jobs:
           docker push wisdom2608/wisdomtech:${{ steps.date_time.outputs.timestamp }}
 
 # There  two ways to update the image tag in the Kubernetes manifests file:
+
+# ***********************************************************************************************
 # a) Using sed command to find and replace the image tag in the Kubernetes manifest file direclty.
-     
+# ***********************************************************************************************    
+
 # # UPdate the K8s Manifest Files
 
 #         # View the old k8s manifest (optional)
@@ -53,10 +56,12 @@ jobs:
 #       - name: Show Updated Kubernetes Manifest
 #         run: cat manifests/deploy.yml
 
-
+# ***********************************************************************************************
 # b) Using find command to find and replace the image tag in the Kubernetes manifests file.
+# ***********************************************************************************************
 
 # UPdate the K8s Manifest Files
+
 
         # View the old k8s manifest before update(optional)
       - name: Show Original Kubernetes Manifest
@@ -74,14 +79,16 @@ jobs:
 
 
 
-
 # Now that the image tag in the Kubernetes manifest file has been updated, we need to ....
 # ..... update the repository or commit the changes to the repository.
 
-
+#-----------------------------------------------
 # THERE ARE TWO WAYS TO UPDATE THE REPOSITORY:
+#------------------------------------------------
 
+# ***********************
 # a) First Possibility.
+# ***********************
       
     # # Update Github Repository.
     #   - name: Commit and push updated manifests
@@ -93,8 +100,9 @@ jobs:
     #       git remote set-url origin https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/wisdom2608/application.git
     #       git push origin main
 
-
-    # a) Second Possibility.
+# ************************
+# b) Second Possibility.
+# ************************
 
       - name: Commit and push updated manifests
         env:
