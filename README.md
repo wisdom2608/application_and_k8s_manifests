@@ -427,3 +427,8 @@ The disadvantage of this approve is that we'll alway have to do `git pull` befor
 
 This means that anytime that we've to update our application source code, we've to do `git pull`. This makes our job tidious. To solve this problem, our application source code and k8s manifests files should be kept in different Github repositories. My next project will be to *build and push docker image to dockerhub* in `application` repository and then *update image tags in the k8s manifest file and commit the changes* to the `k8s manifest` repository.
 
+# 🛠 Here is a project to build and push Docker image to Dockerhub using github actions and then, update Kubernetes manifest files which in a separate repository within the same GitHub account.
+
+# Workflow repository link: https://github.com/wisdom2608/app_source_code
+# kubernetes manifests repository link: https://github.com/wisdom2608/k8s_manifest
+
