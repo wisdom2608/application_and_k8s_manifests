@@ -280,7 +280,7 @@ b) Second possibility
 
 ```
 
-# CONCLUSTION: Here aere two verriefied workflow yml files which you cand use to build and push docker image to dockerhub, update image tags in k8s manifests, and commit the changes to the Github repository. Choose any of the workflow files below
+# CONCLUSTION: Here are two verriefied workflow yml files which you cand use to build and push docker image to dockerhub, update image tags in k8s manifests, and commit the changes to the Github repository. Choose any of the workflow files below
 
 I) 
 
