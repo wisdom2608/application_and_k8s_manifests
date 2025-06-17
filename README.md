@@ -1,5 +1,6 @@
-# This project is to build and push docker image to dockerhub, update kubernetes manifest file with the latest image tag, and commit the changes to the same (update the) repository
-## Step 1: Create a github repository  for your application  source code
+**This project is to build and push docker image to dockerhub, update kubernetes manifest file with the latest image tag, and commit the changes to the same (update the) repository**
+
+**Step 1: Create a github repository  for your application  source code**
   - N=Repository name: `application`
   - Inside `application` repository:
 
@@ -33,7 +34,7 @@ spec:
             - containerPort: 80
 ```
 
-## Step 2: Build and push docker image to dockerhub
+**Step 2: Build and push docker image to dockerhub**
   - Here is the workflow file.
 
 ```bash
@@ -75,7 +76,7 @@ jobs:
 
 ```
 
-## Step 3: We need to update the k8s manifest(deploy.yml) file with the latest image tag after the image is built and pushed to dockerhub successfully.
+**Step 3: We need to update the k8s manifest(deploy.yml) file with the latest image tag after the image is built and pushed to dockerhub successfully**
 
 - In the same workflow file, we add the steps for the image tag update.
 **There  two ways to update the image tag in the Kubernetes manifests(deploy.yml) file**:
@@ -233,7 +234,8 @@ jobs:
         run: cat manifests/deploy.yml
 ```
 
-## Step 4: Update or commit the changes Github repository after updating the K8s manifest in the workflow runs.
+**Step 4: Update or commit the changes Github repository after updating the K8s manifest in the workflow runs**
+
 To allow GitHub Actions to push or disable branch protections, you need to configure the necessary permissions and branch protection settings in your repository:
 
 Granting GitHub Actions Permissions to Push commit changes to your repository,
@@ -422,13 +424,15 @@ jobs:
           git push
 
 ```
-# The Downside Of Having The Source Code and The Manifest Files In The Same Repository.
+**The Downside Of Having The Source Code and The Manifest Files In The Same Repository**
+
 The disadvantage of this approach is that we'll alway have to do `git pull` before updating our source code locally. This is because the update made on k8s manifest file is made only in the remote repository. The change in image tag does not affect k8s manifest file in our local environment. So, for us to have these changes, we must run `git pull`.
 
 This means that anytime that we've to update our application source code, we've to do `git pull`. This makes our job a little tidious. To solve this problem, our application source code and k8s manifests files should be kept in different Github repositories. My next project will be to **build and push docker image to dockerhub** in `application` repository and then **update image tags in the k8s manifest file and commit the changes** to the `k8s manifest` repository.
 
-# 🛠 Here is a project to build and push Docker image to Dockerhub using github actions and then, update Kubernetes manifest files which are in a separate repository within the same GitHub account.
+🛠 **Here is a project to build and push Docker image to Dockerhub using github actions and then, update Kubernetes manifest files which are in a separate repository within the same GitHub account**
 
-# Workflow repository link: https://github.com/wisdom2608/app_source_code
-# kubernetes manifests repository link: https://github.com/wisdom2608/k8s_manifest
+*Workflow repository link: https://github.com/wisdom2608/app_source_code*
+
+*kubernetes manifests repository link: https://github.com/wisdom2608/k8s_manifest*
 
